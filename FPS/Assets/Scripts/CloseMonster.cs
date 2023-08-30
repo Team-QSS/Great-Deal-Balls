@@ -1,10 +1,5 @@
-using System;
-using System.Collections;
-using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.AI;
-using UnityEngine.PlayerLoop;
-using Random = UnityEngine.Random;
 
 public class CloseMonster : MonoBehaviour, IHit
 {
@@ -16,16 +11,16 @@ public class CloseMonster : MonoBehaviour, IHit
     private Animator     anim;
 
     [Header("Anim Stats")] [SerializeField]
-    private float attackAnimTime;
+    private float attackAnimTime = 3.3f;
 
-    [SerializeField] private float attackSP;
-    [SerializeField] private float attackEP;
-    [SerializeField] private float hitTime;
-    [SerializeField] private float dieTime;
+    [SerializeField] private float attackSP = 0.3f;
+    [SerializeField] private float attackEP = 0.46f;
+    [SerializeField] private float hitTime  = 1.12f;
+    [SerializeField] private float dieTime = 3.34f;
 
     [Header("Base Stats")] public float hp     = 100;
     public                        float damage = 10;
-    public                        float speed  = 3;
+    public                        float speed  = 5;
 
     private bool isAttack;
     private bool isHit;
@@ -42,6 +37,7 @@ public class CloseMonster : MonoBehaviour, IHit
         body       = GetComponent<Collider>();
         realWeapon = GetComponentInChildren<BoxCollider>();
         navAg      = GetComponent<NavMeshAgent>();
+        Debug.Log(navAg);
         anim       = GetComponent<Animator>();
     }
 
