@@ -7,16 +7,18 @@ using Random = UnityEngine.Random;
 
 public class Spawner : MonoBehaviour
 {
-    [SerializeField] private int count;
-    [SerializeField] private float spawnDis;
+    [SerializeField] private Transform[] spawnPointTransforms;
+    
+    [SerializeField] private int   count;
     [SerializeField] private float spawnTime;
-    private float spawnTimer;
+    
+    private                  float spawnTimer;
     private void Update()
     {
         if (Time.time > spawnTimer)
         {
-            GameManager.monsterPool.Get(null, 0).transform.position 
-                = PlayerController.playerPos + new Vector3(Random.Range(-1f, 1f), 0, Random.Range(-1f, 1f)).normalized * spawnDis;
+            GameManager.MonsterPool.Get(null, 0).transform.position
+                = spawnPointTransforms[Random.Range(0, spawnPointTransforms.Length)].position;
             spawnTimer = Time.time + spawnTime;
         }
     }

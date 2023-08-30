@@ -13,7 +13,7 @@ public class MonsterPool : MonoBehaviour
 
     private void Awake()
     {
-        GameManager.monsterPool = this;
+        GameManager.MonsterPool = this;
         pools = new Queue<GameObject>[prefabs.Length];
         for (int i = 0; i < prefabs.Length; i++)
         {
