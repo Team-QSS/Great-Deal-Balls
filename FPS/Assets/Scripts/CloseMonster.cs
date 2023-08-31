@@ -10,24 +10,23 @@ public class CloseMonster : MonoBehaviour, IHit
 {
     private int index;
 
-
-    private Collider body;
-    private Collider realWeapon;
+    private Collider     body;
+    private Collider     realWeapon;
     private NavMeshAgent navAg;
-    private Animator anim;
-    
-    [Header("Anim Stats")]
-    [SerializeField] private float attackAnimTime;
+    private Animator     anim;
+
+    [Header("Anim Stats")] [SerializeField]
+    private float attackAnimTime;
+
     [SerializeField] private float attackSP;
     [SerializeField] private float attackEP;
     [SerializeField] private float hitTime;
     [SerializeField] private float dieTime;
-    
-    [Header("Base Stats")]
-    public float hp = 100;
-    public float damage = 10;
-    public float speed = 3;
-    
+
+    [Header("Base Stats")] public float hp     = 100;
+    public                        float damage = 10;
+    public                        float speed  = 3;
+
     private bool isAttack;
     private bool isHit;
     private bool isDie;
@@ -37,58 +36,63 @@ public class CloseMonster : MonoBehaviour, IHit
     private float attackET;
     private float hitTimer;
     private float dieTimer;
-    
+
     private void Awake()
     {
-        body = GetComponent<Collider>();
+        body       = GetComponent<Collider>();
         realWeapon = GetComponentInChildren<BoxCollider>();
-        navAg = GetComponent<NavMeshAgent>();
-        anim = GetComponent<Animator>();
+        navAg      = GetComponent<NavMeshAgent>();
+        anim       = GetComponent<Animator>();
     }
 
     private void OnEnable()
     {
-        navAg.speed = speed;
-        body.enabled = true;
+        navAg.speed   = speed;
+        body.enabled  = true;
         navAg.enabled = true;
-        isDie = false;
-        isHit = false;
-        isAttack = false;
+        isDie         = false;
+        isHit         = false;
+        isAttack      = false;
     }
 
     private void Update()
     {
         if (isDie)
         {
-            if(Time.time > dieTimer)
+            if (Time.time > dieTimer)
             {
-                GameManager.monsterPool.ReturnObject(gameObject, index);
+                GameManager.MonsterPool.ReturnObject(gameObject, index);
             }
+
             return;
         }
+
         if (isAttack)
         {
             if (Time.time > attackST && Time.time < attackET) realWeapon.enabled = true;
-            else realWeapon.enabled = false;
+            else realWeapon.enabled                                              = false;
             if (Time.time > attackTimer)
             {
-                isAttack = false;
+                isAttack        = false;
                 navAg.isStopped = false;
             }
+
             return;
         }
+
         if (isHit)
         {
             if (Time.time > hitTimer)
             {
-                isHit = false;
+                isHit           = false;
                 navAg.isStopped = false;
             }
+
             return;
         }
 
         navAg.enabled = true;
-        navAg.SetDestination(PlayerController.playerPos);
+        navAg.SetDestination(PlayerController.PlayerPos);
         anim.SetBool("Run", true);
         navAg.avoidancePriority = Mathf.CeilToInt(navAg.remainingDistance * 10);
     }
@@ -98,17 +102,17 @@ public class CloseMonster : MonoBehaviour, IHit
         if (isAttack || isHit || isDie) return;
         isAttack = true;
         anim.SetBool("Run", false);
-        transform.LookAt(PlayerController.playerPos);
+        transform.LookAt(PlayerController.PlayerPos);
         navAg.isStopped = true;
         anim.SetTrigger("Attack");
         attackTimer = Time.time + attackAnimTime;
-        attackST = Time.time + attackAnimTime * attackSP;
-        attackET = Time.time + attackAnimTime * attackEP;
+        attackST    = Time.time + attackAnimTime * attackSP;
+        attackET    = Time.time + attackAnimTime * attackEP;
     }
 
     void Die()
     {
-        body.enabled = false;
+        body.enabled  = false;
         navAg.enabled = false;
         anim.Play("Die");
         isDie = true;
@@ -118,17 +122,18 @@ public class CloseMonster : MonoBehaviour, IHit
 
     public void Hit(float damage)
     {
-        if(isDie) return;
+        if (isDie) return;
         hp -= damage;
         if (!isHit)
         {
-            isHit = true;
-            isAttack = false;
+            isHit           = true;
+            isAttack        = false;
             navAg.isStopped = true;
             anim.ResetTrigger("Attack");
             anim.SetBool("Run", false);
             realWeapon.enabled = false;
         }
+
         if (hp <= 0)
         {
             Die();
@@ -137,13 +142,14 @@ public class CloseMonster : MonoBehaviour, IHit
         {
             anim.Play("Hit", 0, 0f);
         }
+
         hitTimer = Time.time + hitTime;
     }
-    
+
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Player"))
-        { 
+        {
             other.gameObject.GetComponent<IHit>().Hit(damage);
         }
     }
@@ -155,5 +161,4 @@ public class CloseMonster : MonoBehaviour, IHit
             Attack();
         }
     }
-    
 }
