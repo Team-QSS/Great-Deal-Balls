@@ -121,7 +121,11 @@ Material:
     - _EmissionColor: {r: 7.099453, g: 7.4780803, b: 112.99962, a: 1}
     - _SpecColor: {r: 0.2, g: 0.2, b: 0.2, a: 1}
   m_BuildTextureStacks: []
+<<<<<<< Updated upstream
 --- !u!114 &5547430004105843145
+=======
+--- !u!114 &8957753754978312316
+>>>>>>> Stashed changes
 MonoBehaviour:
   m_ObjectHideFlags: 11
   m_CorrespondingSourceObject: {fileID: 0}
